@@ -1,0 +1,8 @@
+*.env
+!*.env.example
+build/
+*.log
+uploads/temp/
+node_modules/
+/.vite
+dist/
