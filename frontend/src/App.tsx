@@ -10,50 +10,57 @@ function App() {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
+      <header className="bg-white/90 backdrop-blur-lg shadow-sm border-b border-gray-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <MessageCircle className="h-8 w-8 text-blue-500" />
-              <h1 className="ml-2 text-xl font-semibold text-gray-900">RAG WhatsApp Chat</h1>
+            <div className="flex items-center gap-3">
+              <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-2 rounded-xl shadow-lg">
+                <MessageCircle className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  Chat RAG IA
+                </h1>
+                <p className="text-xs text-gray-500">Assistente Inteligente</p>
+              </div>
             </div>
 
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center gap-3">
               {/* Navigation Tabs */}
-              <nav className="flex space-x-2 sm:space-x-4">
+              <nav className="flex gap-1 bg-gray-100/80 p-1 rounded-xl backdrop-blur-sm">
                 <button
                   onClick={() => setActiveTab('chat')}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
                     activeTab === 'chat'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                      ? 'bg-white text-blue-700 shadow-md scale-105'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                   }`}
                 >
-                  <MessageCircle className="w-4 h-4 inline mr-1" />
+                  <MessageCircle className="w-4 h-4" />
                   <span className="hidden sm:inline">Chat</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('documents')}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
                     activeTab === 'documents'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                      ? 'bg-white text-blue-700 shadow-md scale-105'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                   }`}
                 >
-                  <FileText className="w-4 h-4 inline mr-1" />
-                  <span className="hidden sm:inline">Documentos</span>
+                  <FileText className="w-4 h-4" />
+                  <span className="hidden sm:inline">Docs</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('tests')}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center gap-2 ${
                     activeTab === 'tests'
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                      ? 'bg-white text-blue-700 shadow-md scale-105'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                   }`}
                 >
-                  <TestTube className="w-4 h-4 inline mr-1" />
+                  <TestTube className="w-4 h-4" />
                   <span className="hidden sm:inline">Testes</span>
                 </button>
               </nav>
@@ -61,7 +68,8 @@ function App() {
               {/* Settings Button */}
               <button
                 onClick={() => setIsSettingsOpen(true)}
-                className="p-2 text-gray-400 hover:text-gray-500 rounded-md"
+                className="p-2.5 text-gray-600 hover:text-blue-700 hover:bg-blue-50 rounded-xl transition-all duration-200 border border-transparent hover:border-blue-200 hover:shadow-sm"
+                title="Configurações"
               >
                 <Settings className="w-5 h-5" />
               </button>
@@ -71,10 +79,12 @@ function App() {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {activeTab === 'chat' && <ChatInterface showHistory={true} />}
-        {activeTab === 'documents' && <DocumentManager />}
-        {activeTab === 'tests' && <TestPanel />}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="animate-fadeIn">
+          {activeTab === 'chat' && <ChatInterface showHistory={true} />}
+          {activeTab === 'documents' && <DocumentManager />}
+          {activeTab === 'tests' && <TestPanel />}
+        </div>
       </main>
 
       {/* Settings Panel */}

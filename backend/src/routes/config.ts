@@ -11,6 +11,24 @@ const AVAILABLE_MODELS = [
   { id: 'google/palm-2-chat-bison', name: 'PaLM 2 Chat', provider: 'Google', contextLength: 4096 },
 ];
 
+// Converter snake_case para camelCase
+function toCamelCase(obj: any) {
+  if (!obj) return obj;
+
+  return {
+    id: obj.id,
+    openRouterApiKey: obj.open_router_api_key || '',
+    selectedModel: obj.selected_model || 'openai/gpt-3.5-turbo',
+    systemPrompt:
+      obj.system_prompt ||
+      'Você é um assistente útil que responde perguntas com base no contexto fornecido.',
+    evolutionApiUrl: obj.evolution_api_url || 'https://evodevs.cordex.ai',
+    evolutionApiKey: obj.evolution_api_key || 'V0e3EBKbaJFnKREYfFCqOnoi904vAPV7',
+    createdAt: obj.created_at,
+    updatedAt: obj.updated_at,
+  };
+}
+
 // Buscar configurações
 router.get('/', async (req, res) => {
   try {
@@ -19,15 +37,16 @@ router.get('/', async (req, res) => {
     `);
 
     const defaultConfig = {
-      open_router_api_key: '',
-      selected_model: 'openai/gpt-3.5-turbo',
-      system_prompt:
+      openRouterApiKey: '',
+      selectedModel: 'openai/gpt-3.5-turbo',
+      systemPrompt:
         'Você é um assistente útil que responde perguntas com base no contexto fornecido.',
-      evolution_api_url: 'https://evodevs.cordex.ai',
-      evolution_api_key: 'V0e3EBKbaJFnKREYfFCqOnoi904vAPV7',
+      evolutionApiUrl: 'https://evodevs.cordex.ai',
+      evolutionApiKey: 'V0e3EBKbaJFnKREYfFCqOnoi904vAPV7',
     };
 
-    const config = result.rows[0] || defaultConfig;
+    const dbConfig = result.rows[0];
+    const config = dbConfig ? toCamelCase(dbConfig) : defaultConfig;
 
     res.json({
       success: true,
@@ -45,13 +64,26 @@ router.post('/', async (req, res) => {
   const client = await pool.connect();
 
   try {
+    // Aceitar tanto camelCase (frontend) quanto snake_case (legado)
     const {
+      openRouterApiKey,
       open_router_api_key,
+      selectedModel,
       selected_model,
+      systemPrompt,
       system_prompt,
+      evolutionApiUrl,
       evolution_api_url,
+      evolutionApiKey,
       evolution_api_key,
     } = req.body;
+
+    // Usar camelCase se disponível, senão snake_case
+    const apiKey = openRouterApiKey || open_router_api_key;
+    const model = selectedModel || selected_model;
+    const prompt = systemPrompt || system_prompt;
+    const evoUrl = evolutionApiUrl || evolution_api_url;
+    const evoKey = evolutionApiKey || evolution_api_key;
 
     await client.query('BEGIN');
 
@@ -69,7 +101,7 @@ router.post('/', async (req, res) => {
         WHERE id = 1
         RETURNING *
       `,
-        [open_router_api_key, selected_model, system_prompt, evolution_api_url, evolution_api_key],
+        [apiKey, model, prompt, evoUrl, evoKey],
       );
     } else {
       // Insert
@@ -80,13 +112,14 @@ router.post('/', async (req, res) => {
         VALUES (1, $1, $2, $3, $4, $5)
         RETURNING *
       `,
-        [open_router_api_key, selected_model, system_prompt, evolution_api_url, evolution_api_key],
+        [apiKey, model, prompt, evoUrl, evoKey],
       );
     }
 
     await client.query('COMMIT');
 
-    res.json({ success: true, data: result.rows[0] });
+    // Retornar em camelCase para o frontend
+    res.json({ success: true, data: toCamelCase(result.rows[0]) });
   } catch (error) {
     await client.query('ROLLBACK');
     console.error('Error saving config:', error);

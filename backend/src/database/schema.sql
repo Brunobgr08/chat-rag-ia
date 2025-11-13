@@ -45,7 +45,7 @@ RETURNS tsvector AS $$
 BEGIN
   RETURN to_tsvector('portuguese', unaccent(lower(text)));
 END;
-$$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql IMMUTABLE;
 
 -- Índice para full-text search
 CREATE INDEX IF NOT EXISTS documents_content_fts_idx
