@@ -84,7 +84,7 @@ Integração com o WhatsApp via Evolution API.
 ### Prompt Utilizado
 
 ```
-[]
+[Adicionate WhatsApp integration to the chat system using the Evolution API. The integration should include a webhook to receive messages, processing with AI + RAG, and sending responses via the Evolution API.]
 ```
 
 ---

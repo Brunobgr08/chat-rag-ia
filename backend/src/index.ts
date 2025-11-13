@@ -9,6 +9,7 @@ import { testConnection, initializeTables } from './lib/database';
 import configRoutes from './routes/config';
 import documentRoutes from './routes/documents';
 import chatRoutes from './routes/chat';
+import whatsappRoutes from './routes/whatsapp';
 
 // Load environment variables
 dotenv.config();
@@ -25,6 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/config', configRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/whatsapp', whatsappRoutes);
 
 // Health check
 app.get('/api/health', async (req, res) => {
@@ -54,6 +56,7 @@ const initializeApp = async () => {
       console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
       console.log(`📁 Documents API: http://localhost:${PORT}/api/documents`);
       console.log(`💬 Chat API: http://localhost:${PORT}/api/chat`);
+      console.log(`📱 WhatsApp Webhook: http://localhost:${PORT}/api/whatsapp/webhook/:instance`);
     });
   } catch (error) {
     console.error('❌ Failed to initialize application:', error);
