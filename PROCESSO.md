@@ -57,15 +57,14 @@ Implementação do sistema RAG para busca e recuperação de informações.
 
 ### Passos
 
-1. Configurar sistema de embeddings
-2. Implementar indexação de documentos
-3. Criar sistema de busca semântica
-4. Integrar RAG com o chat
+1. Upload de arquivos (PDF, TXT, MD)
+2. Listar e deletar documentos
+3. Usar documentos como contexto nas respostas
 
 ### Prompt Utilizado
 
 ```
-[Add a Retrieval-Augmented Generation (RAG) system to the chat system. The RAG system should include an embedding system, document indexing, semantic search, and integration with the chat system.]
+[Add a Retrieval-Augmented Generation (RAG) system to the chat system. The RAG system should include document upload, listing, deletion, and usage as context in responses.]
 ```
 
 ---
