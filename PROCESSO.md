@@ -49,28 +49,7 @@ Implementação do painel de configurações com as seguintes funcionalidades:
 
 ---
 
-## 3. Sistema de Chat
-
-### Descrição
-
-Implementação do sistema de chat principal.
-
-### Passos
-
-1. Criar interface de chat
-2. Implementar envio e recebimento de mensagens
-3. Integrar com API da Open Router
-4. Adicionar histórico de conversas
-
-### Prompt Utilizado
-
-```
-[]
-```
-
----
-
-## 4. Sistema RAG (Retrieval-Augmented Generation)
+## 3. Sistema RAG (Retrieval-Augmented Generation)
 
 ### Descrição
 
@@ -91,18 +70,17 @@ Implementação do sistema RAG para busca e recuperação de informações.
 
 ---
 
-## 5. Upload e Processamento de Documentos
+## 4. Integração WhatsApp
 
 ### Descrição
 
-Sistema para upload e processamento de documentos para o RAG.
+Integração com o WhatsApp via Evolution API.
 
 ### Passos
 
-1. Criar interface de upload
-2. Implementar processamento de diferentes formatos (PDF, TXT, etc.)
-3. Extrair e chunkar texto
-4. Gerar embeddings dos documentos
+1. Webhook para receber mensagens
+2. Processar com IA + RAG
+3. Enviar respostas via Evolution API
 
 ### Prompt Utilizado
 
@@ -112,60 +90,19 @@ Sistema para upload e processamento de documentos para o RAG.
 
 ---
 
-## 6. Interface de Usuário
+## 5. Interface de Testes
 
 ### Descrição
 
-Desenvolvimento da interface de usuário completa.
+Criação de uma interface de testes para simulação de conversas.
 
 ### Passos
 
-1. Design do layout principal
+1. Definir interface de chat local
 2. Implementar componentes reutilizáveis
 3. Adicionar responsividade
 4. Melhorias de UX/UI
-
-### Prompt Utilizado
-
-```
-[]
-```
-
----
-
-## 7. Testes e Validação
-
-### Descrição
-
-Implementação de testes e validação do sistema.
-
-### Passos
-
-1. Criar testes unitários
-2. Implementar testes de integração
-3. Validar fluxos principais
-4. Correção de bugs
-
-### Prompt Utilizado
-
-```
-[]
-```
-
----
-
-## 8. Deploy e Documentação
-
-### Descrição
-
-Preparação para deploy e documentação final.
-
-### Passos
-
-1. Configurar ambiente de produção
-2. Otimizar performance
-3. Criar documentação de uso
-4. Deploy da aplicação
+5. Histórico de conversas
 
 ### Prompt Utilizado
 
@@ -179,15 +116,20 @@ Preparação para deploy e documentação final.
 
 ### Tecnologias Utilizadas
 
-- [React + TypeScript + Vite]
-- [Express + TypeScript]
-- [PostgreSQL]
-- [Vercel]
+- React + TypeScript + Vite
+- Express + TypeScript
+- PostgreSQL
+- Vercel
 
 ### Desafios Encontrados
 
-- []
+-
 
 ### Melhorias Futuras
 
-- []
+- Dashboard com métricas
+- Visualização de kanban (fases) para os chats
+- Integração com MCPs
+- Busca e filtros nas conversas
+- Exportação de conversas (PDF/JSON)
+- Sistema de avaliação de respostas
