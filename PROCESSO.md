@@ -97,7 +97,7 @@ Criação de uma interface de testes para simulação de conversas.
 
 ### Passos
 
-1. Definir interface de chat local
+1. Definir interface de chat local para testes
 2. Implementar componentes reutilizáveis
 3. Adicionar responsividade
 4. Melhorias de UX/UI
@@ -106,7 +106,7 @@ Criação de uma interface de testes para simulação de conversas.
 ### Prompt Utilizado
 
 ```
-[]
+[Create a testing interface for the chat system. The interface should include a local chat, reusable components, responsiveness, and UX/UI improvements. Include a conversation history.]
 ```
 
 ---

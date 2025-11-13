@@ -173,4 +173,33 @@ router.get('/conversations/:id', async (req, res) => {
   }
 });
 
+// Deletar conversa
+router.delete('/conversations/:id', async (req, res) => {
+  const client = await pool.connect();
+
+  try {
+    const { id } = req.params;
+
+    const result = await client.query(
+      'DELETE FROM conversations WHERE id = $1 RETURNING id, title',
+      [id],
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, error: 'Conversa não encontrada' });
+    }
+
+    res.json({
+      success: true,
+      message: 'Conversa deletada com sucesso',
+      data: result.rows[0],
+    });
+  } catch (error) {
+    console.error('Error deleting conversation:', error);
+    res.status(500).json({ success: false, error: 'Internal server error' });
+  } finally {
+    client.release();
+  }
+});
+
 export default router;
