@@ -65,7 +65,7 @@ Implementação do sistema RAG para busca e recuperação de informações.
 ### Prompt Utilizado
 
 ```
-[]
+[Add a Retrieval-Augmented Generation (RAG) system to the chat system. The RAG system should include an embedding system, document indexing, semantic search, and integration with the chat system.]
 ```
 
 ---
