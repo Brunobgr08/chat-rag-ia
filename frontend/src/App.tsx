@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Settings, MessageCircle, FileText, TestTube } from 'lucide-react';
 import SettingsPanel from './components/SettingsPanel';
 import ChatInterface from './components/ChatInterface';
