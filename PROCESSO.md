@@ -44,7 +44,7 @@ Implementação do painel de configurações com as seguintes funcionalidades:
 ### Prompt Utilizado
 
 ```
-[]
+[Create a settings panel for a chat system with AI, RAG, and WhatsApp integration via the Evolution API. The panel should include Open Router API Key management, model selector (GPT-4, Claude, Llama, etc.), and System Prompt editor.]
 ```
 
 ---
