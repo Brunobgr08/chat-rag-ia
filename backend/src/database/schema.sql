@@ -34,3 +34,19 @@ CREATE TABLE IF NOT EXISTS conversations (
 -- Índice para busca semântica (requer extensão vector)
 CREATE INDEX IF NOT EXISTS documents_embedding_idx
 ON documents USING ivfflat (embedding vector_cosine_ops);
+
+-- Atualização do schema para suportar full-text search
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+CREATE EXTENSION IF NOT EXISTS unaccent;
+
+-- Função para busca case-insensitive e sem acentos
+CREATE OR REPLACE FUNCTION portuguese_tsvector(text TEXT)
+RETURNS tsvector AS $$
+BEGIN
+  RETURN to_tsvector('portuguese', unaccent(lower(text)));
+END;
+$$ LANGUAGE plpgsql;
+
+-- Índice para full-text search
+CREATE INDEX IF NOT EXISTS documents_content_fts_idx
+ON documents USING gin(portuguese_tsvector(content));
