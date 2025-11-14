@@ -141,7 +141,7 @@ router.post('/validate-api-key', async (req, res) => {
     });
 
     if (response.status === 200) {
-      const data = await response.json();
+      const data: any = await response.json();
       res.json({ success: true, valid: true, data: data.data });
     } else {
       res.json({ success: true, valid: false, error: 'Invalid API key' });
