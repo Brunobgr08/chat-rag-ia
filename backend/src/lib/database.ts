@@ -1,15 +1,13 @@
 import { Pool } from 'pg';
-import dotenv from 'dotenv';
-
-dotenv.config();
+import config from '../config/env';
 
 export const pool = new Pool({
-  host: process.env.PG_HOST || 'localhost',
-  port: parseInt(process.env.PG_PORT || '5432'),
-  database: process.env.PG_DATABASE || 'rag_chat',
-  user: process.env.PG_USER || 'postgres',
-  password: process.env.PG_PASSWORD || 'password',
-  ssl: process.env.PG_SSL === 'true' ? { rejectUnauthorized: false } : false,
+  host: config.database.host,
+  port: config.database.port,
+  database: config.database.database,
+  user: config.database.user,
+  password: config.database.password,
+  ssl: config.database.ssl ? { rejectUnauthorized: false } : false,
 });
 
 // Testar conexão
@@ -33,19 +31,22 @@ export const initializeTables = async () => {
     await client.query('BEGIN');
 
     // Tabela de configurações
-    await client.query(`
+    await client.query(
+      `
       CREATE TABLE IF NOT EXISTS app_config (
         id INTEGER PRIMARY KEY DEFAULT 1,
         open_router_api_key TEXT,
-        selected_model TEXT DEFAULT 'openai/gpt-3.5-turbo',
-        system_prompt TEXT DEFAULT 'Você é um assistente útil que responde perguntas com base no contexto fornecido.',
-        evolution_api_url TEXT DEFAULT 'https://evodevs.cordex.ai',
+        selected_model TEXT DEFAULT $1,
+        system_prompt TEXT DEFAULT $2,
+        evolution_api_url TEXT DEFAULT $3,
         evolution_api_key TEXT,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         CONSTRAINT single_row CHECK (id = 1)
       )
-    `);
+    `,
+      [config.defaults.model, config.defaults.systemPrompt, config.evolution.defaultApiUrl],
+    );
 
     // Tabela de documentos
     await client.query(`

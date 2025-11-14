@@ -4,13 +4,14 @@ import pdf from 'pdf-parse';
 import fs from 'fs/promises';
 import { pool } from '../lib/database';
 import { v4 as uuidv4 } from 'uuid';
+import envConfig from '../config/env';
 
 const router = express.Router();
 
 // Configuração do Multer para upload
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
-    const uploadDir = './uploads';
+    const uploadDir = envConfig.upload.directory;
     try {
       await fs.access(uploadDir);
     } catch {
@@ -27,14 +28,14 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB
+    fileSize: envConfig.upload.maxFileSize,
   },
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['application/pdf', 'text/plain', 'text/markdown'];
+    const allowedTypes = envConfig.upload.allowedTypes;
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
-      cb(new Error('Tipo de arquivo não suportado. Use PDF, TXT ou MD.'));
+      cb(new Error(`Tipo de arquivo não suportado. Use: ${allowedTypes.join(', ')}`));
     }
   },
 });

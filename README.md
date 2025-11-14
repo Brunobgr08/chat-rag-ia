@@ -10,6 +10,11 @@ Sistema de chat com IA integrado ao WhatsApp usando RAG (Retrieval-Augmented Gen
 - ✅ Interface de teste com histórico
 - ✅ Deploy na Vercel
 
+## ☁️ Deploy na Vercel
+
+- Frontend: https://chat-rag-ia.vercel.app
+- Backend: https://chat-rag-ia-backend.vercel.app
+
 ## 🛠️ Stack Técnica
 
 ### Frontend
@@ -34,9 +39,7 @@ Sistema de chat com IA integrado ao WhatsApp usando RAG (Retrieval-Augmented Gen
 
 **Banco de Dados:**
 
-- PostgreSQL
-- URL: [A definir]
-- Chave: [A definir]
+- PostgreSQL(Railway)
 
 ## 📦 Instalação
 
