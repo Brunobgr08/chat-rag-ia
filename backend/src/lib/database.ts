@@ -69,11 +69,18 @@ export const initializeTables = async () => {
       )
     `);
 
-    // Índice para busca semântica (se usar pgvector)
+    // Índice Full-Text Search para busca em português
     await client.query(`
-      CREATE INDEX IF NOT EXISTS documents_embedding_idx
-      ON documents USING ivfflat (embedding vector_cosine_ops)
+      CREATE INDEX IF NOT EXISTS documents_content_fts_idx
+      ON documents USING gin (to_tsvector('portuguese', content))
     `);
+
+    // Índice pgvector para busca semântica (requer extensão vector instalada)
+    // Comentado para evitar erros se a extensão não estiver disponível
+    // await client.query(`
+    //   CREATE INDEX IF NOT EXISTS documents_embedding_idx
+    //   ON documents USING ivfflat (embedding vector_cosine_ops)
+    // `);
 
     await client.query('COMMIT');
     console.log('✅ Tabelas inicializadas com sucesso');
