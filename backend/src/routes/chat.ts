@@ -59,13 +59,20 @@ router.post('/', async (req, res) => {
 
     // Buscar documentos relevantes
     const relevantDocs = await ragService.searchRelevantDocuments(message);
+
     const context = ragService.buildContextFromDocuments(relevantDocs);
 
     // Preparar mensagens para o LLM
+    const systemPrompt = ragService.generatePromptWithContext(
+      message,
+      context,
+      config.system_prompt,
+    );
+
     const messages = [
       {
         role: 'system',
-        content: ragService.generatePromptWithContext(message, context, config.system_prompt),
+        content: systemPrompt,
       },
       {
         role: 'user',

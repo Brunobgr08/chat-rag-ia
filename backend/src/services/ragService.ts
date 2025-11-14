@@ -4,9 +4,8 @@ export class RAGService {
   // Buscar documentos relevantes para uma consulta
   async searchRelevantDocuments(query: string, limit: number = 3): Promise<any[]> {
     try {
-      // Busca simples por similaridade de texto (para começar)
-      // Posteriormente pode ser substituído por embeddings com pgvector
-      const result = await pool.query(
+      // Estratégia 1: Full-Text Search (mais preciso)
+      const ftsResult = await pool.query(
         `SELECT id, name, content, metadata,
                 TS_RANK(TO_TSVECTOR('portuguese', content), PLAINTO_TSQUERY('portuguese', $1)) as rank
          FROM documents
@@ -16,9 +15,54 @@ export class RAGService {
         [query, limit],
       );
 
-      return result.rows;
+      // Estratégia 2: Busca por substring (mais flexível)
+      // Extrai palavras-chave da query (remove palavras comuns)
+      const keywords = query
+        .toLowerCase()
+        .split(/\s+/)
+        .filter((word) => word.length > 3) // Remove palavras muito curtas
+        .filter(
+          (word) =>
+            ![
+              'qual',
+              'como',
+              'onde',
+              'quando',
+              'porque',
+              'para',
+              'sobre',
+              'este',
+              'essa',
+              'isso',
+            ].includes(word),
+        );
+
+      if (keywords.length > 0) {
+        // Busca por qualquer palavra-chave no conteúdo
+        const likeParams = keywords.map((k) => `%${k}%`);
+
+        const likeResult = await pool.query(
+          `SELECT id, name, content, metadata, 0.7 as rank
+           FROM documents
+           WHERE ${keywords.map((_, i) => `content ILIKE $${i + 1}`).join(' OR ')}
+           ORDER BY created_at DESC
+           LIMIT $${keywords.length + 1}`,
+          [...likeParams, limit],
+        );
+      }
+
+      // Estratégia 3: Fallback - retornar todos os documentos
+      const fallbackResult = await pool.query(
+        `SELECT id, name, content, metadata, 0.5 as rank
+         FROM documents
+         ORDER BY created_at DESC
+         LIMIT $1`,
+        [limit],
+      );
+
+      return fallbackResult.rows;
     } catch (error) {
-      console.error('Error searching documents:', error);
+      console.error('[RAG Service] Error searching documents:', error);
       return [];
     }
   }
