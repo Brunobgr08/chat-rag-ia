@@ -160,16 +160,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ showHistory = true }) => 
         } bg-white rounded-lg shadow h-full flex flex-col`}
       >
         {/* Header */}
-        <div className="p-4 border-b flex justify-between items-center">
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900">Chat com IA + RAG</h2>
-            <p className="text-sm text-gray-500">
+        <div className="p-4 border-b flex justify-between items-center flex-wrap gap-2">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg font-semibold text-gray-900 truncate">Chat com IA + RAG</h2>
+            <p className="text-sm text-gray-500 truncate">
               {conversationId ? `Conversa: ${conversationId.substring(0, 8)}...` : 'Nova conversa'}
             </p>
           </div>
           <button
             onClick={handleClearChat}
-            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors"
+            className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-md transition-colors flex-shrink-0"
             title="Limpar chat"
           >
             <Trash2 className="w-5 h-5" />
@@ -196,7 +196,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ showHistory = true }) => 
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[70%] rounded-lg p-4 ${
+                  className={`max-w-[85%] sm:max-w-[70%] rounded-lg p-3 sm:p-4 ${
                     message.role === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-900'
                   }`}
                 >
@@ -261,21 +261,21 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ showHistory = true }) => 
         </div>
 
         {/* Input Area */}
-        <div className="p-4 border-t bg-gray-50">
+        <div className="p-3 sm:p-4 border-t bg-gray-50">
           <div className="flex gap-2">
             <textarea
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Digite sua mensagem... (Shift+Enter para nova linha)"
-              className="flex-1 resize-none rounded-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Digite sua mensagem..."
+              className="flex-1 resize-none rounded-lg border border-gray-300 p-2 sm:p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm sm:text-base"
               rows={3}
               disabled={isLoading}
             />
             <button
               onClick={handleSendMessage}
               disabled={!inputMessage.trim() || isLoading}
-              className={`px-6 rounded-lg font-medium transition-colors flex items-center gap-2 ${
+              className={`px-3 sm:px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 min-w-[60px] sm:min-w-[100px] ${
                 !inputMessage.trim() || isLoading
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   : 'bg-blue-600 text-white hover:bg-blue-700'
@@ -289,7 +289,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ showHistory = true }) => 
               <span className="hidden sm:inline">Enviar</span>
             </button>
           </div>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-gray-500 mt-2 hidden sm:block">
             💡 Dica: O sistema busca automaticamente nos documentos enviados para responder suas
             perguntas
           </p>
