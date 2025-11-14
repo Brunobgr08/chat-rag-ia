@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Send, Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
+import api from '../lib/api';
 
 interface TestResult {
   name: string;
@@ -21,8 +22,7 @@ const TestPanel: React.FC = () => {
         name: 'Conexão com Backend',
         test: async () => {
           const start = Date.now();
-          const response = await fetch('http://localhost:3001/api/health');
-          const data = await response.json();
+          const data = await api.health();
           const duration = Date.now() - start;
 
           if (data.status === 'OK') {
@@ -35,8 +35,7 @@ const TestPanel: React.FC = () => {
         name: 'Banco de Dados',
         test: async () => {
           const start = Date.now();
-          const response = await fetch('http://localhost:3001/api/health');
-          const data = await response.json();
+          const data = await api.health();
           const duration = Date.now() - start;
 
           if (data.database === 'Connected') {
@@ -49,8 +48,7 @@ const TestPanel: React.FC = () => {
         name: 'Configurações',
         test: async () => {
           const start = Date.now();
-          const response = await fetch('http://localhost:3001/api/config');
-          const data = await response.json();
+          const data = await api.config.get();
           const duration = Date.now() - start;
 
           if (data.success) {
@@ -67,8 +65,7 @@ const TestPanel: React.FC = () => {
         name: 'Documentos',
         test: async () => {
           const start = Date.now();
-          const response = await fetch('http://localhost:3001/api/documents');
-          const data = await response.json();
+          const data = await api.documents.list(1, 10);
           const duration = Date.now() - start;
 
           if (data.success) {
@@ -86,8 +83,7 @@ const TestPanel: React.FC = () => {
         name: 'Histórico de Conversas',
         test: async () => {
           const start = Date.now();
-          const response = await fetch('http://localhost:3001/api/chat/conversations');
-          const data = await response.json();
+          const data = await api.chat.getConversations();
           const duration = Date.now() - start;
 
           if (data.success) {
@@ -193,8 +189,8 @@ const TestPanel: React.FC = () => {
                 result.status === 'success'
                   ? 'bg-green-50 border-green-200'
                   : result.status === 'error'
-                    ? 'bg-red-50 border-red-200'
-                    : 'bg-blue-50 border-blue-200'
+                  ? 'bg-red-50 border-red-200'
+                  : 'bg-blue-50 border-blue-200'
               }`}
             >
               <div className="flex items-start gap-3">
@@ -213,4 +209,3 @@ const TestPanel: React.FC = () => {
 };
 
 export default TestPanel;
-

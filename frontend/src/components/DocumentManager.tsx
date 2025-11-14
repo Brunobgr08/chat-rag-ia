@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, FileText, Trash2, Search, BarChart3 } from 'lucide-react';
+import api from '../lib/api';
 
 interface Document {
   id: string;
@@ -49,10 +50,7 @@ const DocumentManager: React.FC = () => {
 
   const loadDocuments = async () => {
     try {
-      const response = await fetch(
-        `/api/documents?page=${pagination.page}&limit=${pagination.limit}`,
-      );
-      const data: DocumentsResponse = await response.json();
+      const data: DocumentsResponse = await api.documents.list(pagination.page, pagination.limit);
 
       if (data.success) {
         setDocuments(data.data);
@@ -67,8 +65,7 @@ const DocumentManager: React.FC = () => {
 
   const loadStats = async () => {
     try {
-      const response = await fetch('/api/documents/stats/summary');
-      const data: StatsResponse = await response.json();
+      const data: StatsResponse = await api.documents.stats();
 
       if (data.success) {
         setStats(data.data);
@@ -84,16 +81,8 @@ const DocumentManager: React.FC = () => {
 
     setIsUploading(true);
 
-    const formData = new FormData();
-    formData.append('document', file);
-
     try {
-      const response = await fetch('/api/documents/upload', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
+      const data = await api.documents.upload(file);
 
       if (data.success) {
         alert('Documento enviado com sucesso!');
@@ -117,11 +106,7 @@ const DocumentManager: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`/api/documents/${id}`, {
-        method: 'DELETE',
-      });
-
-      const data = await response.json();
+      const data = await api.documents.delete(id);
 
       if (data.success) {
         alert('Documento deletado com sucesso!');
