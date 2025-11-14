@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Key, Cpu, MessageSquare, TestTube } from 'lucide-react';
+import { Save, Key, Cpu, MessageSquare, TestTube, X } from 'lucide-react';
 import { AppConfig, Model } from '../../../shared/types';
 import api from '../lib/api';
 
@@ -50,6 +50,10 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
 
       if (data.success) {
         showMessage('success', 'Configurações salvas com sucesso!');
+        // Auto-fechar após 500ms para o usuário ver a mensagem de sucesso
+        setTimeout(() => {
+          onClose();
+        }, 500);
       } else {
         throw new Error(data.error);
       }
@@ -87,10 +91,17 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">Configurações</h2>
+        <div className="p-6 border-b relative">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+            aria-label="Fechar"
+          >
+            <X className="w-5 h-5" />
+          </button>
+          <h2 className="text-xl font-semibold text-gray-900 pr-10">Configurações</h2>
           <p className="text-gray-600 mt-1">Configure as chaves de API e modelos de IA</p>
         </div>
 

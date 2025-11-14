@@ -163,9 +163,9 @@ const DocumentManager: React.FC = () => {
         </div>
 
         {/* Upload Area */}
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-          <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600 mb-4">
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 sm:p-8 text-center">
+          <Upload className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-3 sm:mb-4" />
+          <p className="text-sm sm:text-base text-gray-600 mb-3 sm:mb-4 px-2">
             Arraste arquivos PDF, TXT ou MD aqui, ou clique para selecionar
           </p>
           <input
@@ -184,25 +184,23 @@ const DocumentManager: React.FC = () => {
           >
             {isUploading ? 'Enviando...' : 'Selecionar Arquivo'}
           </label>
-          <p className="text-xs text-gray-500 mt-2">
-            Tamanho máximo: 10MB • Formatos: PDF, TXT, MD
-          </p>
+          <p className="text-xs text-gray-500 mt-2">Máx: 10MB • PDF, TXT, MD</p>
         </div>
       </div>
 
       {/* Lista de Documentos */}
       <div className="bg-white rounded-lg shadow">
         <div className="p-6 border-b">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <h3 className="text-lg font-semibold">Documentos</h3>
-            <div className="relative">
+            <div className="relative w-full sm:w-auto">
               <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Buscar documentos..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full sm:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-center placeholder:text-center"
               />
             </div>
           </div>
@@ -226,27 +224,31 @@ const DocumentManager: React.FC = () => {
               {filteredDocuments.map((doc) => (
                 <div
                   key={doc.id}
-                  className="p-6 flex items-center justify-between hover:bg-gray-50"
+                  className="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 hover:bg-gray-50"
                 >
-                  <div className="flex items-center space-x-4">
-                    <span className="text-2xl">{getFileIcon(doc.type)}</span>
-                    <div>
-                      <h4 className="font-medium text-gray-900">{doc.name}</h4>
-                      <div className="flex items-center space-x-4 text-sm text-gray-500 mt-1">
-                        <span>{doc.type}</span>
-                        <span>•</span>
-                        <span>
+                  <div className="flex items-start sm:items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
+                    <span className="text-xl sm:text-2xl flex-shrink-0">
+                      {getFileIcon(doc.type)}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <h4 className="font-medium text-gray-900 truncate">{doc.name}</h4>
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs sm:text-sm text-gray-500 mt-1">
+                        <span className="truncate">{doc.type}</span>
+                        <span className="hidden sm:inline">•</span>
+                        <span className="truncate">
                           {doc.metadata?.size
                             ? formatFileSize(doc.metadata.size)
                             : 'Tamanho desconhecido'}
                         </span>
-                        <span>•</span>
-                        <span>{new Date(doc.created_at).toLocaleDateString('pt-BR')}</span>
+                        <span className="hidden sm:inline">•</span>
+                        <span className="truncate">
+                          {new Date(doc.created_at).toLocaleDateString('pt-BR')}
+                        </span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-2 self-end sm:self-auto">
                     <button
                       onClick={() => deleteDocument(doc.id, doc.name)}
                       className="p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors"
