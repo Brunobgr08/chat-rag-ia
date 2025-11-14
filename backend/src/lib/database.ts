@@ -31,22 +31,19 @@ export const initializeTables = async () => {
     await client.query('BEGIN');
 
     // Tabela de configurações
-    await client.query(
-      `
+    await client.query(`
       CREATE TABLE IF NOT EXISTS app_config (
         id INTEGER PRIMARY KEY DEFAULT 1,
         open_router_api_key TEXT,
-        selected_model TEXT DEFAULT $1,
-        system_prompt TEXT DEFAULT $2,
-        evolution_api_url TEXT DEFAULT $3,
+        selected_model TEXT DEFAULT '${config.defaults.model}',
+        system_prompt TEXT DEFAULT '${config.defaults.systemPrompt.replace(/'/g, "''")}',
+        evolution_api_url TEXT DEFAULT '${config.evolution.defaultApiUrl}',
         evolution_api_key TEXT,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
         CONSTRAINT single_row CHECK (id = 1)
       )
-    `,
-      [config.defaults.model, config.defaults.systemPrompt, config.evolution.defaultApiUrl],
-    );
+    `);
 
     // Tabela de documentos
     await client.query(`
