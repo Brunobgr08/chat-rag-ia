@@ -2,8 +2,8 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import dotenv from 'dotenv';
 import { testConnection, initializeTables } from './lib/database';
+import config from './config/env';
 
 // Routes
 import configRoutes from './routes/config';
@@ -11,41 +11,26 @@ import documentRoutes from './routes/documents';
 import chatRoutes from './routes/chat';
 import whatsappRoutes from './routes/whatsapp';
 
-// Load environment variables
-dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = config.server.port;
 
 // Middleware
 app.use(helmet());
 
-// CORS - permite localhost (dev) e frontend URL (prod)
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174',
-  process.env.FRONTEND_URL,
-].filter(Boolean); // Remove valores undefined/null/empty
+// CORS - aceita origens configuradas + frontend URL de produção
+const allowedOrigins = [...config.cors.origins];
+if (config.server.frontendUrl) {
+  allowedOrigins.push(config.server.frontendUrl);
+}
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      // Permite requisições sem origin (ex: Postman, curl)
-      if (!origin) return callback(null, true);
-
-      // Permite origens na lista
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      // Bloqueia outras origens
-      callback(new Error('Not allowed by CORS'));
-    },
+    origin: allowedOrigins,
     credentials: true,
   }),
 );
 
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: config.server.jsonLimit }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/config', configRoutes);

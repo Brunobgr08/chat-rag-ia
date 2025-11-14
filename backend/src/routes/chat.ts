@@ -2,6 +2,7 @@ import express from 'express';
 import { ragService } from '../services/ragService';
 import { pool } from '../lib/database';
 import { v4 as uuidv4 } from 'uuid';
+import envConfig from '../config/env';
 
 const router = express.Router();
 
@@ -13,7 +14,7 @@ async function getAppConfig() {
 
 // Serviço simples de chat com Open Router
 async function callOpenRouterAPI(messages: any[], config: any) {
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  const response = await fetch(envConfig.openRouter.apiUrl, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${config.open_router_api_key}`,
@@ -22,8 +23,8 @@ async function callOpenRouterAPI(messages: any[], config: any) {
     body: JSON.stringify({
       model: config.selected_model,
       messages: messages,
-      max_tokens: 2000,
-      temperature: 0.7,
+      max_tokens: envConfig.openRouter.maxTokens,
+      temperature: envConfig.openRouter.temperature,
     }),
   });
 

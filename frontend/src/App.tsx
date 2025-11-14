@@ -4,6 +4,7 @@ import SettingsPanel from './components/SettingsPanel';
 import ChatInterface from './components/ChatInterface';
 import DocumentManager from './components/DocumentManager';
 import TestPanel from './components/TestPanel';
+import config from './config';
 
 function App() {
   const [activeTab, setActiveTab] = useState<'chat' | 'documents' | 'tests'>('chat');
@@ -20,8 +21,8 @@ function App() {
                 <MessageCircle className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">Chat RAG IA</h1>
-                <p className="text-xs text-blue-100">Assistente Inteligente</p>
+                <h1 className="text-xl font-bold text-white">{config.app.name}</h1>
+                <p className="text-xs text-blue-100">{config.app.description}</p>
               </div>
             </div>
 

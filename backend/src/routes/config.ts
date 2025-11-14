@@ -1,5 +1,6 @@
 import express from 'express';
 import { pool } from '../lib/database';
+import envConfig from '../config/env';
 
 const router = express.Router();
 
@@ -18,12 +19,10 @@ function toCamelCase(obj: any) {
   return {
     id: obj.id,
     openRouterApiKey: obj.open_router_api_key || '',
-    selectedModel: obj.selected_model || 'openai/gpt-3.5-turbo',
-    systemPrompt:
-      obj.system_prompt ||
-      'Você é um assistente útil que responde perguntas com base no contexto fornecido.',
-    evolutionApiUrl: obj.evolution_api_url || 'https://evodevs.cordex.ai',
-    evolutionApiKey: obj.evolution_api_key || 'V0e3EBKbaJFnKREYfFCqOnoi904vAPV7',
+    selectedModel: obj.selected_model || envConfig.defaults.model,
+    systemPrompt: obj.system_prompt || envConfig.defaults.systemPrompt,
+    evolutionApiUrl: obj.evolution_api_url || envConfig.evolution.defaultApiUrl,
+    evolutionApiKey: obj.evolution_api_key || envConfig.evolution.defaultApiKey,
     createdAt: obj.created_at,
     updatedAt: obj.updated_at,
   };
@@ -38,11 +37,10 @@ router.get('/', async (req, res) => {
 
     const defaultConfig = {
       openRouterApiKey: '',
-      selectedModel: 'openai/gpt-3.5-turbo',
-      systemPrompt:
-        'Você é um assistente útil que responde perguntas com base no contexto fornecido.',
-      evolutionApiUrl: 'https://evodevs.cordex.ai',
-      evolutionApiKey: 'V0e3EBKbaJFnKREYfFCqOnoi904vAPV7',
+      selectedModel: envConfig.defaults.model,
+      systemPrompt: envConfig.defaults.systemPrompt,
+      evolutionApiUrl: envConfig.evolution.defaultApiUrl,
+      evolutionApiKey: envConfig.evolution.defaultApiKey,
     };
 
     const dbConfig = result.rows[0];
@@ -134,7 +132,7 @@ router.post('/validate-api-key', async (req, res) => {
   try {
     const { api_key } = req.body;
 
-    const response = await fetch('https://openrouter.ai/api/v1/auth/key', {
+    const response = await fetch(envConfig.openRouter.validateUrl, {
       headers: {
         Authorization: `Bearer ${api_key}`,
       },

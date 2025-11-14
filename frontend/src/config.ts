@@ -29,9 +29,7 @@ export const config = {
 // Helper para construir URLs da API
 export const getApiUrl = (path: string) => {
   const baseUrl = config.apiUrl;
-  console.log('baseUrl', baseUrl);
   const cleanPath = path.startsWith('/') ? path : `/${path}`;
-  console.log('cleanPath', cleanPath);
   return `${baseUrl}${cleanPath}`;
 };
 
