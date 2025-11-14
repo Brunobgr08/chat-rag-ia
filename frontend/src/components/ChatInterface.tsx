@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Loader2, FileText, AlertCircle, Trash2 } from 'lucide-react';
 import ConversationHistory from './ConversationHistory';
+import api from '../lib/api';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -55,20 +56,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ showHistory = true }) => 
     setError(null);
 
     try {
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          message: inputMessage,
-          conversationId: conversationId,
-        }),
-      });
+      const data: ChatResponse = await api.chat.send(inputMessage, conversationId);
 
-      const data: ChatResponse = await response.json();
-
-      if (!response.ok || !data.success) {
+      if (!data.success) {
         throw new Error(data.error || 'Erro ao enviar mensagem');
       }
 
@@ -124,8 +114,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ showHistory = true }) => 
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:3001/api/chat/conversations/${convId}`);
-      const data = await response.json();
+      const data = await api.chat.getConversation(convId);
 
       if (data.success) {
         const loadedMessages = data.data.messages.map((msg: any) => ({

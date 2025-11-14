@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Save, Key, Cpu, MessageSquare, TestTube } from 'lucide-react';
 import { AppConfig, Model } from '../../../shared/types';
+import api from '../lib/api';
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -30,8 +31,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
 
   const loadConfig = async () => {
     try {
-      const response = await fetch('/api/config');
-      const data = await response.json();
+      const data = await api.config.get();
 
       if (data.success) {
         setConfig(data.data);
@@ -46,13 +46,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
   const saveConfig = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch('/api/config', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(config),
-      });
-
-      const data = await response.json();
+      const data = await api.config.save(config);
 
       if (data.success) {
         showMessage('success', 'Configurações salvas com sucesso!');
@@ -70,13 +64,7 @@ const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
   const testApiKey = async () => {
     setIsTesting(true);
     try {
-      const response = await fetch('/api/config/validate-api-key', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ api_key: config.openRouterApiKey }),
-      });
-
-      const data = await response.json();
+      const data = await api.config.validateApiKey(config.openRouterApiKey);
 
       if (data.success && data.valid) {
         showMessage('success', 'API Key válida!');

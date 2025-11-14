@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, Trash2, Clock, Loader2, RefreshCw } from 'lucide-react';
+import api from '../lib/api';
 
 interface Conversation {
   id: string;
@@ -26,8 +27,7 @@ const ConversationHistory: React.FC<ConversationHistoryProps> = ({
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3001/api/chat/conversations');
-      const data = await response.json();
+      const data = await api.chat.getConversations();
 
       if (data.success) {
         setConversations(data.data);
@@ -54,11 +54,7 @@ const ConversationHistory: React.FC<ConversationHistoryProps> = ({
     }
 
     try {
-      const response = await fetch(`http://localhost:3001/api/chat/conversations/${id}`, {
-        method: 'DELETE',
-      });
-
-      const data = await response.json();
+      const data = await api.chat.deleteConversation(id);
 
       if (data.success) {
         setConversations((prev) => prev.filter((conv) => conv.id !== id));
@@ -158,4 +154,3 @@ const ConversationHistory: React.FC<ConversationHistoryProps> = ({
 };
 
 export default ConversationHistory;
-
