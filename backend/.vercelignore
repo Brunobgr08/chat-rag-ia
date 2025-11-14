@@ -1,0 +1,11 @@
+node_modules
+src
+*.ts
+tsconfig.json
+.env
+.env.local
+.env.example
+.env.example.backup
+uploads
+*.md
+

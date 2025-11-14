@@ -19,12 +19,32 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(helmet());
+
+// CORS - permite localhost (dev) e frontend URL (prod)
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  process.env.FRONTEND_URL,
+].filter(Boolean); // Remove valores undefined/null/empty
+
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'http://localhost:5174', process.env.FRONTEND_URL || ''],
+    origin: (origin, callback) => {
+      // Permite requisições sem origin (ex: Postman, curl)
+      if (!origin) return callback(null, true);
+
+      // Permite origens na lista
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      // Bloqueia outras origens
+      callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
   }),
 );
+
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -56,23 +76,31 @@ const initializeApp = async () => {
       console.log('⚠️  Aplicação rodando sem conexão com o banco');
     }
 
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
-      console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
-      console.log(`📁 Documents API: http://localhost:${PORT}/api/documents`);
-      console.log(`💬 Chat API: http://localhost:${PORT}/api/chat`);
-      console.log(`📱 WhatsApp Webhook: http://localhost:${PORT}/api/whatsapp/webhook/:instance`);
-    });
+    // Only start server if not in Vercel (serverless environment)
+    if (process.env.VERCEL !== '1') {
+      app.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+        console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
+        console.log(`📁 Documents API: http://localhost:${PORT}/api/documents`);
+        console.log(`💬 Chat API: http://localhost:${PORT}/api/chat`);
+        console.log(`📱 WhatsApp Webhook: http://localhost:${PORT}/api/whatsapp/webhook/:instance`);
+      });
+    }
   } catch (error) {
     console.error('❌ Failed to initialize application:', error);
-    process.exit(1);
+    if (process.env.VERCEL !== '1') {
+      process.exit(1);
+    }
   }
 };
 
 initializeApp();
 
 // Error handling
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err.stack);
   res.status(500).json({ success: false, error: 'Something went wrong!' });
 });
+
+// Export for Vercel serverless
+export default app;
