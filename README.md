@@ -30,12 +30,12 @@ Sistema de chat com IA integrado ao WhatsApp usando RAG (Retrieval-Augmented Gen
 - PostgreSQL
 - Evolution API
 
-## 🔑 Credenciais
+## 🔑 Configurações
 
 **Evolution API:**
 
-- URL: https://evodevs.cordex.ai
-- Key: V0e3EBKbaJFnKREYfFCqOnoi904vAPV7
+- URL: Configurar em `EVOLUTION_API_URL` (painel de configurações ou `.env`)
+- Key: Configurar em `EVOLUTION_API_KEY` (painel de configurações ou `.env`)
 
 **Banco de Dados:**
 
