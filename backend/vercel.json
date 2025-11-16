@@ -3,10 +3,7 @@
   "builds": [
     {
       "src": "src/index.ts",
-      "use": "@vercel/node",
-      "config": {
-        "maxDuration": 30
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -14,11 +11,5 @@
       "src": "/(.*)",
       "dest": "src/index.ts"
     }
-  ],
-  "functions": {
-    "src/index.ts": {
-      "maxDuration": 30,
-      "memory": 1024
-    }
-  }
+  ]
 }
