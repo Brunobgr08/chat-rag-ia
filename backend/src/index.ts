@@ -1,4 +1,3 @@
-// backend/src/index.ts (atualizado)
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -31,7 +30,7 @@ app.use(
 );
 
 app.use(express.json({ limit: config.server.jsonLimit }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: config.server.jsonLimit }));
 
 app.use('/api/config', configRoutes);
 app.use('/api/documents', documentRoutes);
@@ -56,9 +55,9 @@ const initializeApp = async () => {
 
     if (dbConnected) {
       await initializeTables();
-      console.log('✅ Aplicação inicializada com sucesso');
+      console.log('[System - INFO] Aplicação inicializada com sucesso');
     } else {
-      console.log('⚠️  Aplicação rodando sem conexão com o banco');
+      console.log('[System - WARN]  Aplicação rodando sem conexão com o banco');
     }
 
     // Only start server if not in Vercel (serverless environment)
@@ -72,7 +71,7 @@ const initializeApp = async () => {
       });
     }
   } catch (error) {
-    console.error('❌ Failed to initialize application:', error);
+    console.error('[System - ERROR] Failed to initialize application:', error);
     if (process.env.VERCEL !== '1') {
       process.exit(1);
     }
